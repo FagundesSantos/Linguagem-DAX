@@ -1,0 +1,76 @@
+Calculate = Função responsavel por realizar a mudança de contexto de avalição, tranformando funções agregadora
+(Analisa a vertical) em funções interantes(Analisa a horizontal).
+
+All = responsavel por eliminar o filtro aplicado pelo contexto de avaliação e filtros externos
+
+Allselected = responsavel por eliminar os filtros aplicado pelo contexto, mas obedece os filtros externos
+gerando a possibilidade de criar medidas para calculos de representatividade do valor referente ao total
+
+calendar = repsonsavel por criar uma tabela via DAX necessitando de informações de data inicio e fim
+
+addcolumns = adiciona colunas em uma tabela 
+
+DATESYTD = Criar uma tabela considerando a data atual(contexto) mais as anteriores, gerando a possibilidade de realizar 
+calculos de acumulado durante os meses 
+
+ex: 
+Acumulado de receita = 
+    CALCULATE(
+        [Total de vendas],
+        DATESYTD(
+            calendario[Date]
+        )
+    )
+
+
+
+DATEADD = Criar uma tabela com datas deslocadas temporalmente, podendo ser para frente ou para tras, muito utilizada
+para retornar o valor do mes anterior e realziar o calculo de MoM.
+
+Valor de vendas do mes anterior = 
+    CALCULATE(
+        [Total de vendas],
+        DATEADD(
+            calendario[Date],
+            -1,
+            MONTH
+        )
+    )
+
+
+SAMEPERIODLASTYEAR = Criar uma tabela com datas do mesmo periodo do ano anterior, muito utilizada
+para retornar o valor do ano anterior e realziar o calculo de YoY.
+
+Valor de vendas do ano anterior = 
+    CALCULATE(
+        [Total de vendas],
+        SAMEPERIODLASTYEAR(
+            calendario[Date]
+        )
+    )
+
+DATESINPERIOD = Criar uma tabela de datas com inicio definido e retrocede um determinado numero de meses,
+muito utilizada para realizar acumulados moveis, por exemplo, a acumulado dos ultimos 3 meses
+ 
+
+#E02B07 - Vermelho
+
+#808080 - Cinza
+
+
+acumulado para sempre = 
+    var maxdata = 
+        MAX(dCalendario[Date])
+
+    return
+
+    CALCULATE(
+        [Recebido],
+        FILTER(
+            ALLSELECTED(
+                dCalendario[Date]
+            ),
+            dCalendario[Date] <= maxdata
+        )
+    )
+         
